@@ -44,24 +44,24 @@ st.markdown("""
   }
   .stTabs [data-baseweb="tab-list"] {
       gap: 8px;
-      border-bottom: 2px solid #1a3a4a;
+      border-bottom: 2px solid #c8d4e0;
   }
   .stTabs [data-baseweb="tab"] {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.85rem;
       font-weight: 600;
-      color: #5a8fa8;
+      color: #3a6a8a;
       border-radius: 4px 4px 0 0;
       padding: 8px 20px;
       background: transparent;
   }
   .stTabs [aria-selected="true"] {
-      color: #e8f4f8 !important;
-      background: #1a3a4a !important;
+      color: #ffffff !important;
+      background: #2a6496 !important;
   }
   .stat-card {
-      background: #0e2330;
-      border: 1px solid #1e4060;
+      background: #ffffff;
+      border: 1px solid #c8d4e0;
       border-radius: 6px;
       padding: 10px 14px;
       text-align: center;
@@ -69,7 +69,7 @@ st.markdown("""
   .stat-label {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.68rem;
-      color: #6aaccc;
+      color: #3a6a8a;
       text-transform: uppercase;
       letter-spacing: 0.08em;
   }
@@ -77,31 +77,31 @@ st.markdown("""
       font-family: 'IBM Plex Mono', monospace;
       font-size: 1.1rem;
       font-weight: 600;
-      color: #c8e8f4;
+      color: #1a2e3a;
   }
   .frame-title {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 1.3rem;
       font-weight: 600;
-      color: #c8e8f4;
+      color: #1a2e3a;
       letter-spacing: 0.04em;
   }
   .sidebar-header {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.75rem;
-      color: #6aaccc;
+      color: #3a6a8a;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       padding-bottom: 4px;
-      border-bottom: 1px solid #1e4060;
+      border-bottom: 1px solid #c8d4e0;
       margin-bottom: 10px;
   }
   /* Dark background for the whole app */
   .stApp {
-      background-color: #060f17;
+      background-color: #f5f7fa;
   }
   section[data-testid="stSidebar"] {
-      background-color: #091520;
+      background-color: #eef1f5;
   }
 </style>
 """, unsafe_allow_html=True)
@@ -113,7 +113,7 @@ SHP_PATH = os.path.join(DATA_DIR, "laguna_lake.shp")
 NORTH_ARROW_PATH = os.path.join(DATA_DIR, "north_arrow.jpg")
 CELL_SIZE_DEG = 0.009          # 1 km grid
 ISLAND_COLOR = "#c8b89a"
-LAKE_EDGE_COLOR = "#1a2a3a"
+LAKE_EDGE_COLOR = "#2a4a6a"
 SCALE_BAR_LAT = 14.35          # reference latitude for scale bar
 SCALE_BAR_KM = 10
 N_MONTHS = 60
@@ -212,7 +212,7 @@ def render_frame(time_index: int, map_type: str,
     month_label = f"{MONTH_NAMES[month - 1]} {year}"
 
     # ── Figure layout ────────────────────────────────────────────────────
-    fig = plt.figure(figsize=(9, 8), facecolor="#060f17")
+    fig = plt.figure(figsize=(9, 8), facecolor="#f5f7fa")
     # Main axes for map
     ax = fig.add_axes([0.04, 0.10, 0.72, 0.82])
     # Colorbar axes
@@ -220,8 +220,8 @@ def render_frame(time_index: int, map_type: str,
     # North arrow axes (top-right)
     nax = fig.add_axes([0.83, 0.78, 0.12, 0.14])
 
-    ax.set_facecolor("#060f17")
-    fig.patch.set_facecolor("#060f17")
+    ax.set_facecolor("#dce8f0")
+    fig.patch.set_facecolor("#f5f7fa")
 
     # ── Draw lake fill and boundary ──────────────────────────────────────
     geom = gdf.geometry.iloc[0]
@@ -232,7 +232,7 @@ def render_frame(time_index: int, map_type: str,
     # Draw lake body background (water color)
     ext_coords = np.array(geom.exterior.coords)[:, :2]
     lake_bg_path = MplPath(ext_coords)
-    lake_bg_patch = PathPatch(lake_bg_path, facecolor="#0a1e2e",
+    lake_bg_patch = PathPatch(lake_bg_path, facecolor="#b8d4e8",
                               edgecolor="none", zorder=0)
     ax.add_patch(lake_bg_patch)
 
@@ -276,26 +276,26 @@ def render_frame(time_index: int, map_type: str,
     ax.set_aspect("equal")
 
     # ── Axes styling ─────────────────────────────────────────────────────
-    ax.tick_params(colors="#6aaccc", labelsize=7)
-    ax.set_xlabel("Longitude (°E)", color="#6aaccc", fontsize=8,
+    ax.tick_params(colors="#3a6a8a", labelsize=7)
+    ax.set_xlabel("Longitude (°E)", color="#3a6a8a", fontsize=8,
                   fontfamily="monospace")
-    ax.set_ylabel("Latitude (°N)", color="#6aaccc", fontsize=8,
+    ax.set_ylabel("Latitude (°N)", color="#3a6a8a", fontsize=8,
                   fontfamily="monospace")
     for spine in ax.spines.values():
-        spine.set_edgecolor("#1e4060")
-    ax.grid(color="#1e4060", linewidth=0.4, linestyle="--", alpha=0.5)
+        spine.set_edgecolor("#a0b8cc")
+    ax.grid(color="#b0c8d8", linewidth=0.4, linestyle="--", alpha=0.5)
 
     # ── Title ────────────────────────────────────────────────────────────
     ax.set_title(f"{title_prefix} · {month_label}",
-                 color="#c8e8f4", fontsize=11,
+                 color="#1a2e3a", fontsize=11,
                  fontfamily="monospace", fontweight="bold", pad=8)
 
     # ── Colorbar ─────────────────────────────────────────────────────────
     cb = ColorbarBase(cax, cmap=cmap, norm=norm, orientation="vertical")
-    cb.set_label(cbar_label, color="#c8e8f4", fontsize=7,
+    cb.set_label(cbar_label, color="#1a2e3a", fontsize=7,
                  fontfamily="monospace")
-    cb.ax.tick_params(colors="#c8e8f4", labelsize=6.5)
-    cb.outline.set_edgecolor("#1e4060")
+    cb.ax.tick_params(colors="#1a2e3a", labelsize=6.5)
+    cb.outline.set_edgecolor("#a0b8cc")
 
     # ── Scale bar ────────────────────────────────────────────────────────
     # 10 km in degrees longitude at reference latitude
@@ -308,18 +308,18 @@ def render_frame(time_index: int, map_type: str,
     sb_y1 = sb_y0 + 0.008
     # Bar
     ax.plot([sb_x0, sb_x0 + scale_deg], [sb_y0, sb_y0],
-            color="#c8e8f4", linewidth=2.5, zorder=5,
+            color="#1a2e3a", linewidth=2.5, zorder=5,
             solid_capstyle="butt")
     # End ticks
     for xp in [sb_x0, sb_x0 + scale_deg]:
         ax.plot([xp, xp], [sb_y0 - 0.004, sb_y0 + 0.004],
-                color="#c8e8f4", linewidth=1.5, zorder=5)
+                color="#1a2e3a", linewidth=1.5, zorder=5)
     # Label
     ax.text(sb_x0 + scale_deg / 2, sb_y0 + 0.009,
             f"{SCALE_BAR_KM} km",
             ha="center", va="bottom", fontsize=7,
-            color="#c8e8f4", fontfamily="monospace", zorder=5,
-            path_effects=[pe.withStroke(linewidth=2, foreground="#060f17")])
+            color="#1a2e3a", fontfamily="monospace", zorder=5,
+            path_effects=[pe.withStroke(linewidth=2, foreground="#f5f7fa")])
 
     # ── North arrow ──────────────────────────────────────────────────────
     nax.set_facecolor("white")
@@ -331,7 +331,7 @@ def render_frame(time_index: int, map_type: str,
         nax.imshow(narr_arr, aspect="auto", interpolation="lanczos")
     else:
         # Fallback: draw a simple N arrow
-        nax.set_facecolor("#060f17")
+        nax.set_facecolor("white")
         nax.annotate("N", xy=(0.5, 0.85), xytext=(0.5, 0.15),
                      xycoords="axes fraction", textcoords="axes fraction",
                      arrowprops=dict(arrowstyle="-|>", color="#c8e8f4", lw=2),
@@ -342,7 +342,7 @@ def render_frame(time_index: int, map_type: str,
     # ── Save to buffer ────────────────────────────────────────────────────
     buf = io.BytesIO()
     fig.savefig(buf, format="png", dpi=150,
-                bbox_inches="tight", facecolor=fig.get_facecolor())
+                bbox_inches="tight", facecolor="#f5f7fa")
     plt.close(fig)
     buf.seek(0)
     return buf.read()
@@ -382,11 +382,11 @@ with st.spinner("Loading dataset…"):
 with st.sidebar:
     st.markdown("""
     <div style="font-family:'IBM Plex Mono',monospace; font-size:1.1rem;
-         font-weight:600; color:#c8e8f4; margin-bottom:4px;">
+         font-weight:600; color:#1a2e3a; margin-bottom:4px;">
     🌊 Laguna de Bay
     </div>
     <div style="font-family:'IBM Plex Mono',monospace; font-size:0.68rem;
-         color:#6aaccc; letter-spacing:0.08em; margin-bottom:18px;">
+         color:#2a5a7a; letter-spacing:0.08em; margin-bottom:18px;">
     MCI* · GPR RECONSTRUCTION
     </div>
     """, unsafe_allow_html=True)
@@ -442,7 +442,7 @@ with st.sidebar:
     st.divider()
     st.markdown("""
     <div style="font-family:'IBM Plex Mono',monospace; font-size:0.62rem;
-         color:#3a6a8a; line-height:1.6;">
+         color:#2a5a7a; line-height:1.6;">
     Sentinel-3 OLCI · GPyTorch GPR<br>
     Kernel: ScaleRBF + ScaleMatérn 3/2<br>
     Grid: 895 cells · 1 km × 1 km<br>
@@ -453,11 +453,11 @@ with st.sidebar:
 # ── Main content ──────────────────────────────────────────────────────────────
 st.markdown("""
 <h1 style="font-family:'IBM Plex Mono',monospace; font-size:1.5rem;
-     color:#c8e8f4; margin-bottom:2px;">
+     color:#1a2e3a; margin-bottom:2px;">
 Spatio-Temporal MCI* Reconstruction
 </h1>
 <p style="font-family:'IBM Plex Sans',sans-serif; font-size:0.85rem;
-   color:#6aaccc; margin-bottom:20px;">
+   color:#3a6a8a; margin-bottom:20px;">
 Laguna de Bay, Philippines &nbsp;·&nbsp; 2021–2025 &nbsp;·&nbsp;
 Gaussian Process Regression · Sentinel-3 OLCI
 </p>
@@ -525,7 +525,7 @@ def render_tab(map_type: str):
     st.markdown("---")
     st.markdown(
         '<div style="font-family:\'IBM Plex Mono\',monospace; '
-        'font-size:0.72rem; color:#6aaccc; letter-spacing:0.08em; '
+        'font-size:0.72rem; color:#2a5a7a; letter-spacing:0.08em; '
         'text-transform:uppercase; margin-bottom:8px;">'
         f'Lake-wide summary · {current_label} · {field_label}</div>',
         unsafe_allow_html=True
