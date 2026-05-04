@@ -110,7 +110,7 @@ st.markdown("""
 DATA_DIR = "data"
 CSV_PATH = os.path.join(DATA_DIR, "gpr_reconstruction.csv")
 SHP_PATH = os.path.join(DATA_DIR, "laguna_lake.shp")
-NORTH_ARROW_PATH = os.path.join(DATA_DIR, "north_arrow.jpg")
+NORTH_ARROW_PATH = os.path.join(DATA_DIR, "north_arrow.png")
 CELL_SIZE_DEG = 0.009          # 1 km grid
 ISLAND_COLOR = "#c8b89a"
 LAKE_EDGE_COLOR = "#2a4a6a"
@@ -327,7 +327,7 @@ def render_frame(time_index: int, map_type: str,
     nax.axis("off")
     if os.path.exists(NORTH_ARROW_PATH):
         from PIL import Image
-        narr = Image.open(NORTH_ARROW_PATH).convert("RGB")
+        narr = Image.open(NORTH_ARROW_PATH).convert("RGBA")
         narr_arr = np.array(narr)
         nax.imshow(narr_arr, aspect="auto", interpolation="lanczos")
     else:
