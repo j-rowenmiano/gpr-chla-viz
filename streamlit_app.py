@@ -141,7 +141,7 @@ def load_data():
 @st.cache_data(show_spinner=False)
 def load_shapefile():
     os.environ["SHAPE_RESTORE_SHX"] = "YES"
-    gdf = gpd.read_file(SHP_PATH)
+    gdf = gpd.read_file(SHP_PATH, engine="pyogrio")
     gdf = gdf.set_crs(epsg=4326, allow_override=True)
     return gdf
 
