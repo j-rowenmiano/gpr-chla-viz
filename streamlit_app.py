@@ -322,14 +322,16 @@ def render_frame(time_index: int, map_type: str,
             path_effects=[pe.withStroke(linewidth=2, foreground="#060f17")])
 
     # ── North arrow ──────────────────────────────────────────────────────
-    nax.set_facecolor("#060f17")
+    nax.set_facecolor("white")
     nax.axis("off")
     if os.path.exists(NORTH_ARROW_PATH):
         from PIL import Image
-        narr = Image.open(NORTH_ARROW_PATH)
-        nax.imshow(narr, aspect="auto")
+        narr = Image.open(NORTH_ARROW_PATH).convert("RGB")
+        narr_arr = np.array(narr)
+        nax.imshow(narr_arr, aspect="auto", interpolation="lanczos")
     else:
         # Fallback: draw a simple N arrow
+        nax.set_facecolor("#060f17")
         nax.annotate("N", xy=(0.5, 0.85), xytext=(0.5, 0.15),
                      xycoords="axes fraction", textcoords="axes fraction",
                      arrowprops=dict(arrowstyle="-|>", color="#c8e8f4", lw=2),
