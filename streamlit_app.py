@@ -471,10 +471,10 @@ def render_tab(map_type: str):
     ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([1, 5, 2])
     with ctrl_col1:
         if st.session_state.playing:
-            if st.button("⏸ Pause", use_container_width=True):
+            if st.button("⏸ Pause", use_container_width=True, key=f"pause_{map_type}"):
                 st.session_state.playing = False
         else:
-            if st.button("▶ Play", use_container_width=True):
+            if st.button("▶ Play", use_container_width=True, key=f"play_{map_type}"):
                 st.session_state.playing = True
 
     with ctrl_col2:
