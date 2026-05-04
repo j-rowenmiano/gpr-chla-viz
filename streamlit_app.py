@@ -146,7 +146,8 @@ def load_shapefile():
     return gdf
 
 @st.cache_data(show_spinner=False)
-def compute_global_limits(df):
+def compute_global_limits():
+    df = load_data()
     mci_vmin = np.nanpercentile(df["MCI_pred_mean"], 5)
     mci_vmax = np.nanpercentile(df["MCI_pred_mean"], 95)
     cv_vmin = 0.0
@@ -154,13 +155,14 @@ def compute_global_limits(df):
     return mci_vmin, mci_vmax, cv_vmin, cv_vmax
 
 @st.cache_data(show_spinner=False)
-def build_clip_path(gdf):
+def build_clip_path():
     """
     Build a compound matplotlib Path for the lake exterior minus island interiors.
     Handles PolygonZ by slicing [:, :2].
+    Takes no args so Streamlit never tries to hash the GeoDataFrame.
     """
+    gdf = load_shapefile()
     geom = gdf.geometry.iloc[0]
-    # Collect all rings (exterior + interiors)
     paths = []
     ext_coords = np.array(geom.exterior.coords)[:, :2]
     paths.append(Path(ext_coords))
@@ -171,7 +173,8 @@ def build_clip_path(gdf):
     return compound
 
 @st.cache_data(show_spinner=False)
-def get_month_data(df, time_index):
+def get_month_data(time_index):
+    df = load_data()
     return df[df["time_index"] == time_index].copy()
 
 @st.cache_data(show_spinner=False)
@@ -183,8 +186,8 @@ def render_frame(time_index: int, map_type: str,
     """
     df = load_data()
     gdf = load_shapefile()
-    clip_path = build_clip_path(gdf)
-    month_df = get_month_data(df, time_index)
+    clip_path = build_clip_path()
+    month_df = get_month_data(time_index)
 
     # Determine field and colormap
     if map_type == "mci":
@@ -371,7 +374,7 @@ def time_index_to_label(ti):
 with st.spinner("Loading dataset…"):
     df = load_data()
     gdf = load_shapefile()
-    mci_vmin, mci_vmax, cv_vmin, cv_vmax = compute_global_limits(df)
+    mci_vmin, mci_vmax, cv_vmin, cv_vmax = compute_global_limits()
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
@@ -423,7 +426,7 @@ with st.sidebar:
     st.markdown('<div class="sidebar-header">Summary Statistics</div>',
                 unsafe_allow_html=True)
     sidebar_map_type = "mci" if "MCI*" in export_tab else "cv"
-    sb_month_df = get_month_data(df, st.session_state.frame_idx)
+    sb_month_df = get_month_data(st.session_state.frame_idx)
     sb_field = "MCI_pred_mean" if sidebar_map_type == "mci" else "MCI_pred_cv_pct"
     sb_stats = compute_stats(sb_month_df, sb_field)
     sidebar_label = time_index_to_label(st.session_state.frame_idx)
@@ -515,7 +518,7 @@ def render_tab(map_type: str):
         st.image(png_bytes, use_container_width=True)
 
     # ── Summary statistics inline ─────────────────────────────────────────
-    month_df = get_month_data(df, st.session_state.frame_idx)
+    month_df = get_month_data(st.session_state.frame_idx)
     stats = compute_stats(month_df, field)
     st.markdown("---")
     st.markdown(
